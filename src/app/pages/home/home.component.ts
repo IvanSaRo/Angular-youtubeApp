@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { YoutubeService } from 'src/app/services/youtube.service';
-
+import { Video } from 'src/app/models/youtube.models';
+import Swal from "sweetalert2"
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -10,14 +11,32 @@ export class HomeComponent implements OnInit {
 
   constructor(private youtubeService: YoutubeService) { }
 
+  videos: Video[] = [];
+
   ngOnInit() {
 
-    this.youtubeService.getVideos()
-    .subscribe( data => {
-      console.log(data);
+    this.loadVideos();
+  }
+
+  showVideo(video: Video){
+    Swal.fire({
+      html: `<h4>${video.title}</h4>
+             <iframe width="100%"
+                     height="315"
+                     src="https://www.youtube.com/embed/${video.resourceId.videoId}"
+                     frameborder="0"
+                     allow="accelerometer;
+                     autoplay;
+                     encrypted-media;
+                     gyroscope;
+                     picture-in-picture"
+                     allowfullscreen></iframe>`
     })
   }
 
-
+  loadVideos(){
+    this.youtubeService.getVideos()
+    .subscribe( data => this.videos.push(...data));
+  }
 
 }

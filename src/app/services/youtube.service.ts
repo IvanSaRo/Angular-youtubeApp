@@ -28,22 +28,22 @@ getVideos(){
                       .set("maxResults", "10")
                       .set("playlistId", this.playList)
                       .set("key", this.apiKey)
+                      .set("pageToken", this.nextPagTok)
 
   return this.http.get<YoutubeResponse>(url, {params})
-             .pipe(map(data => {
-              this.nextPagTok = data.nextPageToken;
-
-              return data.items;
+                  .pipe(map(data => {
+                    this.nextPagTok = data.nextPageToken;
+                    return data.items;
              }),
 
-             map(items => {
-               return items.map( video => video.snippet)
-             })
+             map(items => items.map( video => video.snippet))
+
+             );
 
 
 
 
-             )
+
 }
 
 }
